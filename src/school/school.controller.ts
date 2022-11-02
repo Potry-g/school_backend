@@ -3,6 +3,7 @@ import { CreateSchool } from './dto/create-school.dto';
 import { SchoolService } from './school.service';
 import { CreateProfessor } from './dto/create-professor.dto';
 import { ProfessorService } from './professor.service';
+import { Professor, School } from '@prisma/client';
 
 @Controller('school')
 export class SchoolController {
@@ -12,17 +13,17 @@ export class SchoolController {
   ) {}
 
   @Post('professor')
-  createProfessor(@Body() dto: CreateProfessor) {
+  createProfessor(@Body() dto: CreateProfessor): Promise<Professor> {
     return this.professorService.createProfessor(dto);
   }
 
   @Post('professors')
-  createProfessors(@Body() dto: CreateProfessor[]) {
-    return this.professorService.createProfessors(dto);
+  async createProfessors(@Body() dto: CreateProfessor[]): Promise<Professor[]> {
+    return await this.professorService.createProfessors(dto);
   }
 
   @Get(':id/professor')
-  async readProfessors(@Param('id') id: string) {
+  async readProfessors(@Param('id') id: string): Promise<Professor[]> {
     return this.professorService.readProfessors(Number(id));
   }
 
@@ -30,21 +31,21 @@ export class SchoolController {
   async readProfessor(
     @Param('id') schoolId: string,
     @Param('prof') id: string,
-  ) {
+  ): Promise<Professor> {
     return this.professorService.readProfessor(Number(schoolId), Number(id));
   }
 
   @Post()
-  async createSchool(@Body() dto: CreateSchool) {
+  async createSchool(@Body() dto: CreateSchool): Promise<School> {
     return this.schoolService.createSchool(dto);
   }
 
   @Get(':id')
-  async getSchool(@Param('id') id: string) {
+  async getSchool(@Param('id') id: string): Promise<School> {
     return this.schoolService.readSchool(Number(id));
   }
   @Get()
-  async getSchools() {
+  async getSchools(): Promise<School[]> {
     return this.schoolService.readSchools();
   }
 }

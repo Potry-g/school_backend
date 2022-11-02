@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { School } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateSchool } from './dto/create-school.dto';
 
@@ -6,7 +7,7 @@ import { CreateSchool } from './dto/create-school.dto';
 export class SchoolService {
   constructor(private prisma: PrismaService) {}
 
-  async createSchool(dto: CreateSchool) {
+  async createSchool(dto: CreateSchool): Promise<School> {
     const school = await this.prisma.school.create({
       data: {
         id: dto.id,
@@ -20,8 +21,8 @@ export class SchoolService {
     return school;
   }
 
-  async readSchool(id: number) {
-    const school = this.prisma.school.findUnique({
+  async readSchool(id: number): Promise<School> {
+    const school = await this.prisma.school.findUnique({
       where: {
         id: id,
       },
@@ -29,8 +30,8 @@ export class SchoolService {
     return school;
   }
 
-  async readSchools() {
-    const schools = this.prisma.school.findMany();
+  async readSchools(): Promise<School[]> {
+    const schools = await this.prisma.school.findMany();
     return schools;
   }
 }
